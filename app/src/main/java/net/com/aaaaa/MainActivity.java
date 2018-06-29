@@ -1,17 +1,15 @@
 package net.com.aaaaa;
 
 import android.app.Dialog;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,10 +18,8 @@ import com.bigkoo.pickerview.listener.OnTimeSelectChangeListener;
 import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.TimePickerView;
 
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,26 +31,40 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         StatusUtil.setStatusBarColor(this, android.R.color.white);
         StatusUtil.setStatue(this, true);
-        TextView textView=findViewById(R.id.text);
-        TextView imageView=findViewById(R.id.textview);
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                pvTime.show();
-            }
-        });
-//        Bitmap mBitmap = QRCodeUtil.createQRCodeBitmap("https://www.baidu.com", 480, 480);
-//        imageView.setImageBitmap(mBitmap);
         initTimePicker();
+        initDialog();
+        final TextView textView = findViewById(R.id.textview);
+
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 pvTime.show();
             }
         });
 
     }
+
+    private void initDialog() {
+        Dialog mDialog = pvTime.getDialog();
+        if (mDialog != null) {
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    Gravity.BOTTOM);
+            params.leftMargin = 0;
+            params.rightMargin = 0;
+            pvTime.getDialogContainerLayout().setLayoutParams(params);
+
+            Window dialogWindow = mDialog.getWindow();
+            if (dialogWindow != null) {
+                dialogWindow.setWindowAnimations(com.bigkoo.pickerview.R.style.picker_view_slide_anim);//修改动画样式
+                dialogWindow.setGravity(Gravity.BOTTOM);//改成Bottom,底部显示
+            }
+
+        }
+    }
+
 
     private void initTimePicker() {//Dialog 模式下，在底部弹出
 
@@ -83,27 +93,11 @@ public class MainActivity extends AppCompatActivity {
                 .setSubmitColor(Color.BLUE)//确定按钮文字颜色
                 .setCancelColor(Color.BLUE)//取消按钮文字颜色
                 .setType(new boolean[]{true, true, true, false, false, false})
-                .isDialog(false)
+                .isDialog(true)
                 .build();
 
-      /*  Dialog mDialog = pvTime.getDialog();
-        if (mDialog != null) {
 
-            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    Gravity.BOTTOM);
 
-            params.leftMargin = 0;
-            params.rightMargin = 0;
-            pvTime.getDialogContainerLayout().setLayoutParams(params);
-
-            Window dialogWindow = mDialog.getWindow();
-            if (dialogWindow != null) {
-                dialogWindow.setWindowAnimations(com.bigkoo.pickerview.R.style.picker_view_slide_anim);//修改动画样式
-                dialogWindow.setGravity(Gravity.BOTTOM);//改成Bottom,底部显示
-            }
-        }*/
     }
 
     private String getTime(Date date) {//可根据需要自行截取数据显示
